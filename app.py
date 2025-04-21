@@ -3,26 +3,26 @@ import mysql.connector
 
 app = FastAPI()
 
-# Connect to MySQL database
+# Connect to the MySQL database
 db = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="password",
+    user="Admin",
+    password="SQL**PW",
     database="task_manager"
 )
 
-# Create task endpoint
+# CREATE a new task
 @app.post("/tasks/")
-def create_task(user_id: int, description: str):
+def create_task(user_id: int, description: str, due_date: str):
     cursor = db.cursor()
     cursor.execute(
-        "INSERT INTO tasks (user_id, description) VALUES (%s, %s)", 
-        (user_id, description)
+        "INSERT INTO tasks (user_id, description, due_date) VALUES (%s, %s, %s)", 
+        (user_id, description, due_date)
     )
     db.commit()
     return {"message": "Task created successfully!"}
 
-# Read tasks endpoint
+# READ all tasks
 @app.get("/tasks/")
 def get_tasks():
     cursor = db.cursor(dictionary=True)
@@ -30,7 +30,7 @@ def get_tasks():
     tasks = cursor.fetchall()
     return tasks
 
-# Update task endpoint
+# UPDATE a task status
 @app.put("/tasks/{task_id}")
 def update_task(task_id: int, status: str):
     cursor = db.cursor()
@@ -41,7 +41,7 @@ def update_task(task_id: int, status: str):
     db.commit()
     return {"message": "Task updated successfully!"}
 
-# Delete task endpoint
+# DELETE a task
 @app.delete("/tasks/{task_id}")
 def delete_task(task_id: int):
     cursor = db.cursor()
